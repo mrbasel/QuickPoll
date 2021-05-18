@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  section.main_section 
+    header 
+      h1 Create poll
+    form
+      label Question
+      input(type="text")
+      label 
+        h2 Answers
+      - for (var x = 1; x <= 4; x++)
+        label Answer #{x}
+        input(type="text")
+      label 
+        h2 Options
+        label Deadline
+        input(type="date")
+      
+
+      button Submit 
+    
