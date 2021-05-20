@@ -4,18 +4,18 @@ block content
   section.main_section 
     header 
       h1 Create poll
-    form
+    form(method="POST")
       label Question
-      input(type="text")
+      input(type="text", name="question")
       label 
         h2 Answers
       - for (var x = 1; x <= 4; x++)
         label Answer #{x}
-        input(type="text")
+        input(type="text", name=x)
       label 
         h2 Options
         label Deadline
-        input(type="date")
+        input(type="date", name="date")
       
 
       button Submit 
