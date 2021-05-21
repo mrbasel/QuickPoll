@@ -19,10 +19,28 @@ router.post("/createPoll", function (req, res, next) {
   const choices = Object.values(req.body);
 
   db.Polls.createPoll(question)
-    .then((data) => console.log(data))
+    .then((data) => {
+      db.Polls.addChoices(data.poll_id, choices);
+    })
     .catch((data) => console.log("ERROR: " + data));
 
   res.redirect("/");
+});
+
+router.get("/:pollId", function (req, res, next) {
+  const pollId = req.params.pollId;
+  let question;
+
+  db.Polls.getPoll(pollId)
+    .then((data) => {
+      question = data.question;
+      return db.Polls.getChoices(data.poll_id);
+    })
+    .then((data) => res.render("poll", { question: question, choices: data }))
+    .catch((e) => {
+      console.log(e);
+      res.redirect("/");
+    });
 });
 
 module.exports = router;
