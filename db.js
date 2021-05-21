@@ -10,7 +10,7 @@ class DatabaseWrapper {
 class Polls {
   static createPoll(questionText) {
     return db.one(
-      "INSERT INTO polls(question) VALUES ($1) RETURNING poll_id",
+      "INSERT INTO polls(question) VALUES ($1) RETURNING poll_id, url_id",
       questionText
     );
   }
