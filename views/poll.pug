@@ -7,7 +7,9 @@ block content
     form
       ul
         each choice in choices
-          p=choice.choice_text
-            input(type="radio", name="choice")
+          input(type="radio", name="choice")
+          span=choice.choice_text
+          br
+            
 
       button Vote 
