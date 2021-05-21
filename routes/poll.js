@@ -18,13 +18,17 @@ router.post("/createPoll", function (req, res, next) {
 
   const choices = Object.values(req.body);
 
+  let url_id;
   db.Polls.createPoll(question)
     .then((data) => {
-      db.Polls.addChoices(data.poll_id, choices);
+      url_id = data.url_id;
+      return db.Polls.addChoices(data.poll_id, choices);
     })
-    .catch((data) => console.log("ERROR: " + data));
-
-  res.redirect("/");
+    .then(() => res.redirect("/poll/" + url_id))
+    .catch((data) => {
+      console.log("ERROR: " + data);
+      res.redirect("/");
+    });
 });
 
 router.get("/:pollId", function (req, res, next) {
