@@ -32,6 +32,13 @@ class Polls {
 
     return Promise.all(choices);
   }
+
+  static vote(pollId, choice) {
+    return db.none(
+      "UPDATE choices SET vote_count = vote_count + 1 WHERE poll_id = $1 AND choice_text = $2 ",
+      [pollId, choice]
+    );
+  }
 }
 
 class Choices {}
