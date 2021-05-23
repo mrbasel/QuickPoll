@@ -3,13 +3,12 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const pgp = require("pg-promise")();
+const dotEnv = require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const pollRouter = require("./routes/poll");
 
 const app = express();
-const db = pgp(process.env.database_url);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

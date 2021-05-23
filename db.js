@@ -1,5 +1,5 @@
 const pgp = require("pg-promise")();
-const db = pgp("postgres://postgres:postgres@localhost:5432/test");
+const db = pgp(process.env.DATABASE_URL);
 
 class DatabaseWrapper {
   constructor(database_url) {}
