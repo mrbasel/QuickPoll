@@ -4,11 +4,11 @@ const db = require("../db.js");
 
 const router = express.Router();
 
-router.get("/createPoll", function (req, res, next) {
+router.get("/create", function (req, res, next) {
   res.render("createPoll");
 });
 
-router.post("/createPoll", function (req, res, next) {
+router.post("/create", function (req, res, next) {
   console.log(req.body);
   const question = req.body.question;
   const date = req.body.date;
