@@ -4,12 +4,14 @@ block content
   section.main_section 
     header
       h1=question
-    form
-      ul
-        each choice in choices
-          input(type="radio", name="choice")
-          span=choice.choice_text
-          br
-            
-
-      button Vote 
+      if !canVote
+        p You have already voted in this poll
+      else 
+        form(method="POST")
+          ul
+            each choice in choices
+              input(type="radio", name="choice", value=choice.choice_text)
+              span=choice.choice_text
+              br
+                
+          button Vote 

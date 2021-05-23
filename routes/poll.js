@@ -40,11 +40,35 @@ router.get("/:pollId", function (req, res, next) {
       question = data.question;
       return db.Polls.getChoices(data.poll_id);
     })
-    .then((data) => res.render("poll", { question: question, choices: data }))
+    .then((data) => {
+      let canVote = true;
+      if (req.cookies[pollId] !== undefined) canVote = false;
+
+      res.render("poll", {
+        question: question,
+        choices: data,
+        canVote: canVote,
+      });
+    })
     .catch((e) => {
       console.log(e);
       res.redirect("/");
     });
+});
+
+router.post("/:pollId", function (req, res, next) {
+  const choice = req.body.choice;
+  const urlId = req.url.slice(1);
+
+  res.setHeader("set-cookie", `${urlId}=${choice}; Max-Age=86400`);
+
+  db.Polls.getPoll(urlId)
+    .then((poll) => {
+      return db.Polls.vote(poll.poll_id, choice);
+    })
+    .catch((e) => console.log("ERROR: " + e));
+
+  res.redirect("/");
 });
 
 module.exports = router;
