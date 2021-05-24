@@ -9,7 +9,6 @@ router.get("/create", function (req, res, next) {
 });
 
 router.post("/create", function (req, res, next) {
-  console.log(req.body);
   const question = req.body.question;
   const date = req.body.date;
 
@@ -48,6 +47,7 @@ router.get("/:pollId", function (req, res, next) {
         question: question,
         choices: data,
         canVote: canVote,
+        pollId: pollId
       });
     })
     .catch((e) => {
@@ -66,9 +66,11 @@ router.post("/:pollId", function (req, res, next) {
     .then((poll) => {
       return db.Polls.vote(poll.poll_id, choice);
     })
-    .catch((e) => console.log("ERROR: " + e));
-
-  res.redirect("/");
+    .then(() => res.redirect(req.originalUrl + "/results"))
+    .catch((e) => {
+      res.redirect("/");
+      console.log("ERROR: " + e);
+    });
 });
 
 router.get("/:pollId/results", function (req, res, next) {
@@ -91,7 +93,6 @@ router.get("/:pollId/data", function (req, res, next) {
   db.Polls.getPoll(urlId)
     .then((poll) => db.Polls.getChoices(poll.poll_id))
     .then((choices) => {
-      console.log(choices);
       const data = {
         labels: choices.map((elem) => elem.choice_text),
         datasets: [

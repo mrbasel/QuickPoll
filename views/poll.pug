@@ -6,6 +6,7 @@ block content
       h1=question
       if !canVote
         p You have already voted in this poll
+        a(href=pollId +"/results") View results 
       else 
         form(method="POST")
           ul
