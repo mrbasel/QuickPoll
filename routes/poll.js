@@ -40,6 +40,7 @@ router.get("/:pollId", function (req, res, next) {
       return db.Polls.getChoices(data.poll_id);
     })
     .then((data) => {
+      data.sort((a, b) => a.choice_id - b.choice_id);
       let canVote = true;
       if (req.cookies[pollId] !== undefined) canVote = false;
 
@@ -47,7 +48,7 @@ router.get("/:pollId", function (req, res, next) {
         question: question,
         choices: data,
         canVote: canVote,
-        pollId: pollId
+        pollId: pollId,
       });
     })
     .catch((e) => {
