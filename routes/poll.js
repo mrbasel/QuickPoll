@@ -61,6 +61,9 @@ router.post("/:pollId", function (req, res, next) {
   const choice = req.body.choice;
   const urlId = req.url.slice(1);
 
+  if (req.cookies[urlId] !== undefined)
+    res.redirect(req.originalUrl + "/results");
+
   res.setHeader("set-cookie", `${urlId}=${choice}; Max-Age=86400`);
 
   db.Polls.getPoll(urlId)
