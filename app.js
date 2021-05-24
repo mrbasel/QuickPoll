@@ -7,8 +7,10 @@ const dotEnv = require("dotenv").config();
 
 const indexRouter = require("./routes/index");
 const pollRouter = require("./routes/poll");
+const db = require("./db.js");
 
 const app = express();
+db.DbWrapper.createTables();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

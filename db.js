@@ -1,10 +1,28 @@
 const pgp = require("pg-promise")();
 const db = pgp(process.env.DATABASE_URL);
 
-class DatabaseWrapper {
-  constructor(database_url) {}
+class DbWrapper {
+  static createPollsCmd = `CREATE TABLE IF NOT EXISTS polls (
+    poll_id SERIAL PRIMARY KEY,
+    url_id uuid DEFAULT uuid_generate_v4(),
+    question VARCHAR(250) NOT NULL,
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+);`;
+  static createChoicesCmd = `CREATE TABLE IF NOT EXISTS choices (
+    choice_id SERIAL PRIMARY KEY,
+    poll_id INT,
+    choice_text VARCHAR(200) NOT NULL,
+    vote_count INT DEFAULT 0,
+    CONSTRAINT poll_fk FOREIGN KEY(poll_id) 
+	  REFERENCES polls(poll_id)
+      ON DELETE CASCADE
+);`;
 
-  createTables() {}
+  static createTables() {
+    return db
+      .none(this.createPollsCmd)
+      .then(() => db.none(this.createChoicesCmd));
+  }
 }
 
 class Polls {
@@ -44,3 +62,4 @@ class Polls {
 class Choices {}
 
 exports.Polls = Polls;
+exports.DbWrapper = DbWrapper;
