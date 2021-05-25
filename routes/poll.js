@@ -63,18 +63,19 @@ router.post("/:pollId", function (req, res, next) {
 
   if (req.cookies[urlId] !== undefined)
     res.redirect(req.originalUrl + "/results");
+  else {
+    res.setHeader("set-cookie", `${urlId}=${choice}; Max-Age=86400`);
 
-  res.setHeader("set-cookie", `${urlId}=${choice}; Max-Age=86400`);
-
-  db.Polls.getPoll(urlId)
-    .then((poll) => {
-      return db.Polls.vote(poll.poll_id, choice);
-    })
-    .then(() => res.redirect(req.originalUrl + "/results"))
-    .catch((e) => {
-      res.redirect("/");
-      console.log("ERROR: " + e);
-    });
+    db.Polls.getPoll(urlId)
+      .then((poll) => {
+        return db.Polls.vote(poll.poll_id, choice);
+      })
+      .then(() => res.redirect(req.originalUrl + "/results"))
+      .catch((e) => {
+        res.redirect("/");
+        console.log("ERROR: " + e);
+      });
+  }
 });
 
 router.get("/:pollId/results", function (req, res, next) {
