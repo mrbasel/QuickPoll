@@ -5,7 +5,7 @@ const db = require("../db.js");
 const router = express.Router();
 
 router.get("/create", function (req, res, next) {
-  res.render("createPoll");
+  res.render("createPoll.html");
 });
 
 router.post("/create", function (req, res, next) {
@@ -44,7 +44,7 @@ router.get("/:pollId", function (req, res, next) {
       let canVote = true;
       if (req.cookies[pollId] !== undefined) canVote = false;
 
-      res.render("poll", {
+      res.render("poll.html", {
         question: question,
         choices: data,
         canVote: canVote,
@@ -83,7 +83,7 @@ router.get("/:pollId/results", function (req, res, next) {
 
   db.Polls.getPoll(urlId)
     .then((poll) => {
-      res.render("results", {
+      res.render("results.html", {
         question: poll.question,
       });
     })

@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const dotEnv = require("dotenv").config();
+const nunjucks = require("nunjucks");
 
 const indexRouter = require("./routes/index");
 const pollRouter = require("./routes/poll");
@@ -14,7 +15,11 @@ db.DbWrapper.createTables();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "pug");
+app.set("view engine", "nunjucks");
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app,
+});
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -38,7 +43,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.render("error.html");
 });
 
 module.exports = app;
