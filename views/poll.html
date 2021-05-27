@@ -5,7 +5,7 @@
     <form method="POST">
         <h1>{{ question }}</h1>
         {% for choice in choices %}
-        <div class="form-check">
+        <div class="form-check my-3">
             <label class="form-check-label" for="choice">{{ choice.choice_text }}</label>
             <input class="form-check-input" type="radio" name="choice" value={{ choice.choice_text }}>
         </div>

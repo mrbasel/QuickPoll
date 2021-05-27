@@ -7,10 +7,10 @@ window.onload = () => {
     .then((data) => {
       console.log(data);
       let myChart = new Chart(ctx, {
-        type: "pie",
+        type: "bar",
         data: data,
         options: {
-          responsive: false,
+          // responsive: false,
           scales: {
             y: {
               beginAtZero: true,
