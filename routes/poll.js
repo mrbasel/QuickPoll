@@ -1,6 +1,7 @@
 const express = require("express");
 
 const db = require("../db.js");
+const PollDeadlineError = require("../errors.js");
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.post("/create", function (req, res, next) {
   const choices = Object.values(req.body);
 
   let url_id;
-  db.Polls.createPoll(question)
+  db.Polls.createPoll(question, date + " 21:50:00")
     .then((data) => {
       url_id = data.url_id;
       return db.Polls.addChoices(data.poll_id, choices);
@@ -37,6 +38,11 @@ router.get("/:pollId", function (req, res, next) {
   db.Polls.getPoll(pollId)
     .then((data) => {
       question = data.question;
+      deadlineDate = data.deadline_date;
+
+      if (new Date() > deadlineDate)
+        throw new PollDeadlineError("Poll is finished");
+
       return db.Polls.getChoices(data.poll_id);
     })
     .then((data) => {
@@ -53,7 +59,9 @@ router.get("/:pollId", function (req, res, next) {
     })
     .catch((e) => {
       console.log(e);
-      res.redirect("/");
+      if (e instanceof PollDeadlineError)
+        res.redirect(req.originalUrl + "/results");
+      else res.redirect("/");
     });
 });
 
