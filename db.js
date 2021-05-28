@@ -6,7 +6,8 @@ class DbWrapper {
     poll_id SERIAL PRIMARY KEY,
     url_id uuid DEFAULT uuid_generate_v4(),
     question VARCHAR(250) NOT NULL,
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    deadline_date TIMESTAMPTZ
 );`;
   static createChoicesCmd = `CREATE TABLE IF NOT EXISTS choices (
     choice_id SERIAL PRIMARY KEY,
@@ -26,10 +27,10 @@ class DbWrapper {
 }
 
 class Polls {
-  static createPoll(questionText) {
+  static createPoll(questionText, timeStamp) {
     return db.one(
-      "INSERT INTO polls(question) VALUES ($1) RETURNING poll_id, url_id",
-      questionText
+      "INSERT INTO polls(question, deadline_date) VALUES ($1, $2) RETURNING poll_id, url_id",
+      [questionText, timeStamp]
     );
   }
   static getPoll(pollId) {
