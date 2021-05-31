@@ -6,11 +6,11 @@
         <label for="question" class="form-label">Question</label>
         <input type="text" class="form-control" name="question">
     </div>
-    <div class="mb-3">
+    <div class="mb-3 answers">
         <h3>Answers</h3>
         {% for i in range(1,5) %}
         <label for="answer1" class="form-label">Answer {{ i }}</label>
-        <input type="text" class="form-control" name={{ i }}>
+        <input type="text" class="form-control answer" name={{ i }}>
         {% endfor %}
     </div>
 
@@ -21,4 +21,8 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+{% endblock %}
+
+{% block script %}
+<script src="/javascripts/createPoll.js"></script>
 {% endblock %}

@@ -16,7 +16,10 @@ router.post("/create", async function (req, res, next) {
   // will be remaining in the body
   delete req.body.question;
   delete req.body.date;
-  const choices = Object.values(req.body);
+  let choices = Object.values(req.body);
+
+  // Remove testfields that were left empty
+  choices = choices.filter((elem) => elem !== "");
 
   try {
     const pollData = await db.Polls.createPoll(question, date + " 21:50:00");
