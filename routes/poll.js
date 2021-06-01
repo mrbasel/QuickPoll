@@ -1,7 +1,10 @@
 const express = require("express");
+const pgp = require("pg-promise");
 
 const db = require("../db.js");
+
 const PollDeadlineError = require("../errors.js");
+const QueryResultError = pgp.errors.QueryResultError;
 
 const router = express.Router();
 
@@ -27,7 +30,7 @@ router.post("/create", async function (req, res, next) {
     res.redirect("/poll/" + pollData.url_id);
   } catch (e) {
     console.error(e);
-    res.redirect("/");
+    next(e);
   }
 });
 
@@ -52,10 +55,13 @@ router.get("/:pollId", async function (req, res, next) {
       pollId: pollId,
     });
   } catch (e) {
-    console.log(e);
     if (e instanceof PollDeadlineError)
       res.redirect(req.originalUrl + "/results");
-    else res.redirect("/");
+    else if (e instanceof QueryResultError) next();
+    else {
+      console.error(e);
+      next(e);
+    }
   }
 });
 
@@ -73,8 +79,8 @@ router.post("/:pollId", async function (req, res, next) {
 
       res.redirect(req.originalUrl + "/results");
     } catch (e) {
-      res.redirect("/");
-      console.log("ERROR: " + e);
+      console.error(e);
+      next(e);
     }
   }
 });
@@ -88,8 +94,11 @@ router.get("/:pollId/results", async function (req, res, next) {
       question: pollData.question,
     });
   } catch (e) {
-    console.log(e);
-    res.sendStatus(404);
+    if (e instanceof QueryResultError) next();
+    else {
+      console.error(e);
+      next(e);
+    }
   }
 });
 
@@ -128,8 +137,11 @@ router.get("/:pollId/data", async function (req, res, next) {
     };
     res.json(data);
   } catch (e) {
-    console.log(e);
-    res.sendStatus(404);
+    if (e instanceof QueryResultError) res.sendStatus(404).end();
+    else {
+      console.error(e);
+      next(e);
+    }
   }
 });
 
