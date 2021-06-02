@@ -77,7 +77,7 @@ router.post("/:pollId", async function (req, res, next) {
       const cookieExpiryDate = new Date(pollData.deadline_date).toUTCString();
       res.setHeader(
         "set-cookie",
-        `${urlId}=${choice}; Expires=${cookieExpiryDate}`
+        `${urlId}=${choice}; Expires=${cookieExpiryDate}; Secure; HttpOnly`
       );
 
       await db.Polls.vote(pollData.poll_id, choice);
