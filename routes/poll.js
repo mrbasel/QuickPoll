@@ -25,7 +25,7 @@ router.post("/create", async function (req, res, next) {
   choices = choices.filter((elem) => elem !== "");
 
   try {
-    const pollData = await db.Polls.createPoll(question, date + " 21:50:00");
+    const pollData = await db.Polls.createPoll(question, date + " 23:59:00");
     await db.Polls.addChoices(pollData.poll_id, choices);
     res.redirect("/poll/" + pollData.url_id);
   } catch (e) {
@@ -39,7 +39,7 @@ router.get("/:pollId", async function (req, res, next) {
 
   try {
     const pollData = await db.Polls.getPoll(pollId);
-    if (new Date() > pollData.deadline_date)
+    if (new Date() > new Date(pollData.deadline_date))
       throw new PollDeadlineError("Poll is already finished");
 
     const pollChoices = await db.Polls.getChoices(pollData.poll_id);
@@ -72,9 +72,14 @@ router.post("/:pollId", async function (req, res, next) {
   if (req.cookies[urlId] !== undefined)
     res.redirect(req.originalUrl + "/results");
   else {
-    res.setHeader("set-cookie", `${urlId}=${choice}; Max-Age=86400`);
     try {
       const pollData = await db.Polls.getPoll(urlId);
+      const cookieExpiryDate = new Date(pollData.deadline_date).toUTCString();
+      res.setHeader(
+        "set-cookie",
+        `${urlId}=${choice}; Expires=${cookieExpiryDate}`
+      );
+
       await db.Polls.vote(pollData.poll_id, choice);
 
       res.redirect(req.originalUrl + "/results");
