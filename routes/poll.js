@@ -15,6 +15,12 @@ router.get("/create", function (req, res, next) {
 router.post("/create", async function (req, res, next) {
   const question = req.body.question;
   const date = req.body.date;
+
+  if (question === undefined || date === undefined)
+    return res.redirect(303, "/poll/create");
+
+  if (new Date() > new Date(date)) return res.redirect(303, "/poll/create");
+
   // Remove question and date so that only the choices
   // will be remaining in the body
   delete req.body.question;
@@ -23,6 +29,8 @@ router.post("/create", async function (req, res, next) {
 
   // Remove testfields that were left empty
   choices = choices.filter((elem) => elem !== "");
+
+  if (choices.length < 2) return res.redirect(303, "/poll/create");
 
   try {
     const pollData = await db.Polls.createPoll(question, date + " 23:59:00");
