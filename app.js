@@ -11,7 +11,7 @@ const pollRouter = require("./routes/poll");
 const db = require("./db.js");
 
 const app = express();
-db.DbWrapper.createTables();
+db.createTables();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

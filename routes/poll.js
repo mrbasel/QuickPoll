@@ -34,7 +34,7 @@ router.post("/create", async function (req, res, next) {
 
   try {
     const pollData = await db.Polls.createPoll(question, date + " 23:59:00");
-    await db.Polls.addChoices(pollData.poll_id, choices);
+    await db.Choices.addChoices(pollData.poll_id, choices);
     res.redirect("/poll/" + pollData.url_id);
   } catch (e) {
     console.error(e);
@@ -50,7 +50,7 @@ router.get("/:pollId", async function (req, res, next) {
     if (new Date() > new Date(pollData.deadline_date))
       throw new PollDeadlineError("Poll is already finished");
 
-    const pollChoices = await db.Polls.getChoices(pollData.poll_id);
+    const pollChoices = await db.Choices.getChoices(pollData.poll_id);
     pollChoices.sort((a, b) => a.choice_id - b.choice_id);
     let canVote = true;
 
@@ -120,7 +120,7 @@ router.get("/:pollId/data", async function (req, res, next) {
 
   try {
     const pollData = await db.Polls.getPoll(urlId);
-    const pollChoices = await db.Polls.getChoices(pollData.poll_id);
+    const pollChoices = await db.Choices.getChoices(pollData.poll_id);
 
     const data = {
       labels: pollChoices.map((elem) => elem.choice_text),
