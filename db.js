@@ -60,16 +60,17 @@ const Choices = {
     return db.any(getChoicesStatement);
   },
   addChoices: function (pollId, choices) {
-    choices.map((choice) => {
-      const addChoiceStatement = new PS({
-        name: "add-choice",
-        text: "INSERT INTO choices (poll_id, choice_text) VALUES ($1, $2)",
-        values: [pollId, choice],
-      });
-      return db.none(addChoiceStatement);
+    const values = [];
+    choices.forEach((choice) => {
+      values.push({ poll_id: pollId, choice_text: choice });
     });
 
-    return Promise.all(choices);
+    const columns = new pgp.helpers.ColumnSet(["poll_id", "choice_text"], {
+      table: "choices",
+    });
+
+    const query = pgp.helpers.insert(values, columns);
+    return db.none(query);
   },
 };
 

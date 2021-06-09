@@ -51,9 +51,7 @@ router.get("/:pollId", async function (req, res, next) {
       throw new PollDeadlineError("Poll is already finished");
 
     const pollChoices = await db.Choices.getChoices(pollData.poll_id);
-    pollChoices.sort((a, b) => a.choice_id - b.choice_id);
     let canVote = true;
-
     if (req.cookies[pollId] !== undefined) canVote = false;
 
     res.render("poll.html", {
