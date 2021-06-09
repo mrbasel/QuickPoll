@@ -14,10 +14,17 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", async function (req, res, next) {
   const question = req.body.question;
-  const date = req.body.date;
+  let date = req.body.date;
 
-  if (question === undefined || date === undefined)
-    return res.redirect(303, "/poll/create");
+  if (question === "") return res.redirect(303, "/poll/create");
+
+  // Set the deadline to be 7 days
+  // if no deadline is provided
+  if (!date) {
+    let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 7);
+    date = currentDate.toISOString().split("T")[0];
+  }
 
   if (new Date() > new Date(date)) return res.redirect(303, "/poll/create");
 
