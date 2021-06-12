@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block meta %}
+<meta name="description" content={{ question }}>
+{% endblock %}
+
 {% block title %}
 <title>{{ question }} - QuickPoll</title>
 {% endblock %}
