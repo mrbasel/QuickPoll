@@ -49,12 +49,22 @@ function setDateMinMax() {
 window.onload = () => {
   const submitBtn = document.querySelector("#submitBtn");
   const answerTextFields = document.querySelectorAll(".answer");
+  const deadlineChkBox = document.querySelector("#deadline-option-checkbox");
+  const dateInput = document.querySelector("input[type='date']");
 
   setDateMinMax();
   answerTextFields[answerTextFields.length - 1].addEventListener(
     "focus",
     textboxListener
   );
+
+  deadlineChkBox.addEventListener("change", (e) => {
+    if (deadlineChkBox.checked) dateInput.style.display = "block";
+    else {
+      dateInput.style.display = "none";
+      dateInput.value = "";
+    }
+  });
 
   submitBtn.addEventListener("click", (e) => {
     if (!validAnswers()) {

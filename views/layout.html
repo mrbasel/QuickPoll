@@ -11,7 +11,9 @@
     <link rel="manifest" href="/favicons/site.webmanifest">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
-    <title>QuickPoll</title>
+    {% block style %}{% endblock %}
+    {% block meta %}{% endblock %}
+    {% block title %}<title>QuickPoll</title>{% endblock %}
 </head>
 
 <body class="h-100">
