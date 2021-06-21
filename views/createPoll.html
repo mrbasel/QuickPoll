@@ -11,9 +11,9 @@
         <input type="text" class="form-control" name="question" required>
     </div>
     <div class="mb-3 answers">
-        <h3>Answers</h3>
+        <h3>Choices</h3>
         {% for i in range(1,5) %}
-        <label for="answer1" class="form-label">Answer {{ i }}</label>
+        <label for="answer1" class="form-label">Choice {{ i }}</label>
         <input type="text" class="form-control answer" name={{ i }}>
         {% endfor %}
     </div>
@@ -25,8 +25,6 @@
             <label class="form-check-label" for="deadline-option-checkbox">
                 Set poll deadline
             </label>
-            <img src="/images/help-circle.svg" alt="help icon"
-                title="If no deadline date is set, the default will be 7 days">
         </div>
         <input type="date" class="form-control" name="date" id="date">
     </div>
@@ -36,4 +34,7 @@
 
 {% block script %}
 <script src="/javascripts/createPoll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
 {% endblock %}
