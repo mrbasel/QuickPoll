@@ -33,15 +33,18 @@ router.post("/create", async function (req, res, next) {
   delete req.body.question;
   delete req.body.date;
   let choices = Object.values(req.body);
-
+  
   // Remove testfields that were left empty
   choices = choices.filter((elem) => elem !== "");
 
   if (choices.length < 2) return res.redirect(303, "/poll/create");
 
   try {
-    const pollData = await db.Polls.createPoll(question, date + " 23:59:00");
-    await db.Choices.addChoices(pollData.poll_id, choices);
+    const pollData = await db.Polls.createPoll(
+      question,
+      date + " 23:59:00",
+      choices
+    );
     res.redirect("/poll/" + pollData.url_id);
   } catch (e) {
     console.error(e);
