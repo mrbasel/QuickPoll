@@ -1,6 +1,6 @@
 # QuickPoll
 
-Quick Poll is a webapp for creating, sharing and voting on polls without needing to create an account. 
+Quick Poll is a webapp for creating, sharing and voting on polls without needing to create an account.
 
 ## Built with
 
@@ -24,7 +24,7 @@ git clone https://github.com/mrbasel/QuickPoll.git
 
 2- Install node modules
 
-```npm install```
+`npm install`
 
 3- Create a `.env` file and store it in the root directory of your project
 
@@ -33,4 +33,10 @@ git clone https://github.com/mrbasel/QuickPoll.git
 ```
 NODE_ENV=development
 DATABASE_URL= <your_database_url_here>
+```
+
+5- Make sure your database is running, then run the app:
+
+```
+npm start
 ```
