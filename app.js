@@ -1,9 +1,13 @@
+const environment =
+  process.env.NODE_ENV !== "production" ? "development" : "production";
+
+if (environment !== "production") require("dotenv").config();
+
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const dotEnv = require("dotenv").config();
 const nunjucks = require("nunjucks");
 
 const indexRouter = require("./routes/index");
@@ -21,7 +25,9 @@ nunjucks.configure("views", {
   express: app,
 });
 
-app.use(logger("dev"));
+if (environment === "production") app.use(logger("combined"));
+else app.use(logger("dev"));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

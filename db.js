@@ -32,13 +32,18 @@ const Polls = {
     });
     return db.one(getPollStatement);
   },
-  createPoll: function (questionText, timeStamp) {
+  createPoll: function (questionText, timeStamp, choices) {
     const createPollStatement = new PS({
       name: "create-poll",
       text: "INSERT INTO polls(question, deadline_date) VALUES ($1, $2) RETURNING poll_id, url_id",
       values: [questionText, timeStamp],
     });
-    return db.one(createPollStatement);
+
+    return db.tx(async (t) => {
+      const pollData = await t.one(createPollStatement);
+      await t.none(Choices.addChoices(pollData.poll_id, choices));
+      return pollData;
+    });
   },
   vote: function (pollId, choice) {
     const voteStatement = new PS({
@@ -60,16 +65,17 @@ const Choices = {
     return db.any(getChoicesStatement);
   },
   addChoices: function (pollId, choices) {
-    choices.map((choice) => {
-      const addChoiceStatement = new PS({
-        name: "add-choice",
-        text: "INSERT INTO choices (poll_id, choice_text) VALUES ($1, $2)",
-        values: [pollId, choice],
-      });
-      return db.none(addChoiceStatement);
+    const values = [];
+    choices.forEach((choice) => {
+      values.push({ poll_id: pollId, choice_text: choice });
     });
 
-    return Promise.all(choices);
+    const columns = new pgp.helpers.ColumnSet(["poll_id", "choice_text"], {
+      table: "choices",
+    });
+
+    const query = pgp.helpers.insert(values, columns);
+    return query;
   },
 };
 

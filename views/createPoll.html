@@ -1,3 +1,7 @@
+{% block style %}
+<link rel="stylesheet" href="/stylesheets/createPoll.css">
+{% endblock %}
+
 {% extends "layout.html" %}
 
 {% block body %}
@@ -7,22 +11,30 @@
         <input type="text" class="form-control" name="question" required>
     </div>
     <div class="mb-3 answers">
-        <h3>Answers</h3>
+        <h3>Choices</h3>
         {% for i in range(1,5) %}
-        <label for="answer1" class="form-label">Answer {{ i }}</label>
+        <label for="answer1" class="form-label">Choice {{ i }}</label>
         <input type="text" class="form-control answer" name={{ i }}>
         {% endfor %}
     </div>
 
     <div class="mb-3">
-        <h3>Options</h3>
-        <label for="date" class="form-label">Deadline</label>
-        <input type="date" class="form-control" name="date" id="date" required>
+        <h3 class="mb-4">Options</h3>
+        <div class="form-check my-3">
+            <input class="form-check-input" type="checkbox" id="deadline-option-checkbox">
+            <label class="form-check-label" for="deadline-option-checkbox">
+                Set poll deadline
+            </label>
+        </div>
+        <input type="date" class="form-control" name="date" id="date">
     </div>
-    <button type="submit" id="submitBtn" class="btn btn-primary">Create</button>
+    <button type="submit" id="submitBtn" class="btn btn-primary mt-4">Create</button>
 </form>
 {% endblock %}
 
 {% block script %}
 <script src="/javascripts/createPoll.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
 {% endblock %}
