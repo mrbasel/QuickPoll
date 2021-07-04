@@ -1,7 +1,6 @@
-const environment =
-  process.env.NODE_ENV !== "production" ? "development" : "production";
-
-if (environment !== "production") require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const createError = require("http-errors");
 const express = require("express");
@@ -25,8 +24,8 @@ nunjucks.configure("views", {
   express: app,
 });
 
-if (environment === "production") app.use(logger("combined"));
-else app.use(logger("dev"));
+if (process.env.NODE_ENV !== "production") app.use(logger("dev"));
+else app.use(logger("combined"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
